@@ -16,6 +16,15 @@ operator documentation under `demos/cross-chain-swapper`.
 - Recording a transaction history with simulated transaction hashes.
 - Tracking swap intent state in Solidity for an EVM parachain deployment.
 
+## Bounty Submission
+
+- GitHub submitter: `@firewine`
+- Polkadot payment address: to be supplied privately on maintainer request.
+- Demo video: the repo environment does not include video tooling, but the demo
+  is a dependency-free static app. Run the commands below, execute one transfer,
+  and the UI shows the route, quote, generated XCM, balance updates, and history
+  entry in one screen.
+
 ## Project Structure
 
 ```text
@@ -63,7 +72,9 @@ For an EVM parachain such as Moonbeam or Astar:
 2. Call `createSwapIntent` when the user submits a transfer.
 3. Have the frontend or relayer submit the actual XCM transaction through
    Polkadot-JS API or the parachain's XCM precompile.
-4. Call `markSettled` when the destination-chain event confirms delivery.
+4. Configure trusted relayers with `setRelayer`.
+5. Call `markSettled` from a trusted relayer when the destination-chain event
+   confirms delivery.
 
 The contract intentionally tracks swap intents rather than pretending to send
 XCM by itself. Production XCM submission depends on the target parachain's

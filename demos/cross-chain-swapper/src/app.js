@@ -78,16 +78,15 @@ function currentTransfer() {
   const destination = toChain.value;
   const symbol = asset.value;
   const fee = networkFee(symbol, source, destination);
-  const destinationAmount = Math.max(
-    rateQuote(inputAmount, symbol, destination) - fee,
-    0,
-  );
+  const netSourceAmount = Math.max(inputAmount - fee, 0);
+  const destinationAmount = rateQuote(netSourceAmount, symbol, destination);
 
   return {
     source,
     destination,
     symbol,
     inputAmount,
+    netSourceAmount,
     destinationAsset: chains[destination].asset,
     destinationAmount,
     fee,
@@ -204,6 +203,11 @@ function executeTransfer(event) {
   const sourceBalance = state.balances[transfer.source][transfer.symbol] ?? 0;
   if (sourceBalance < transfer.inputAmount) {
     setStatus("Low balance", "error");
+    return;
+  }
+
+  if (transfer.netSourceAmount <= 0) {
+    setStatus("Amount below fee", "error");
     return;
   }
 
