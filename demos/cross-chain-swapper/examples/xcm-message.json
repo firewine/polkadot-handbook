@@ -1,0 +1,39 @@
+{
+  "version": "V4",
+  "origin": {
+    "parachain": "Asset Hub",
+    "paraId": 1000
+  },
+  "destination": {
+    "parachain": "Acala",
+    "paraId": 2000
+  },
+  "instructions": [
+    {
+      "WithdrawAsset": {
+        "symbol": "DOT",
+        "amount": "10.0000"
+      }
+    },
+    {
+      "BuyExecution": {
+        "fees": "0.0700 DOT",
+        "weightLimit": "Unlimited"
+      }
+    },
+    {
+      "DepositReserveAsset": {
+        "assets": "All",
+        "dest": "Parachain(2000)",
+        "xcm": [
+          {
+            "DepositAsset": {
+              "symbol": "aUSD",
+              "beneficiary": "demo-wallet"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Polkadot XCM Asset Swapper Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Polkadot XCM Demo</p>
+          <h1>Cross-chain asset swapper</h1>
+          <p class="lede">
+            Simulate a reserve-backed XCM transfer across Acala, Moonbeam,
+            Astar, and Asset Hub while inspecting balances, routing, fees, and
+            the generated XCM instruction bundle.
+          </p>
+        </div>
+        <div class="route-map" aria-label="Parachain route map">
+          <div class="relay">Polkadot Relay</div>
+          <div class="chain acala">Acala</div>
+          <div class="chain moonbeam">Moonbeam</div>
+          <div class="chain astar">Astar</div>
+          <div class="chain assethub">Asset Hub</div>
+        </div>
+      </section>
+
+      <section class="dashboard" aria-label="Cross-chain swap demo">
+        <form id="swap-form" class="panel swap-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Build transfer</h2>
+              <p>Choose a source chain, destination chain, and token amount.</p>
+            </div>
+            <span id="route-status" class="status-pill">Ready</span>
+          </div>
+
+          <div class="field-grid">
+            <label>
+              From
+              <select id="from-chain" name="fromChain"></select>
+            </label>
+            <label>
+              To
+              <select id="to-chain" name="toChain"></select>
+            </label>
+          </div>
+
+          <label>
+            Asset
+            <select id="asset" name="asset"></select>
+          </label>
+
+          <label>
+            Amount
+            <input
+              id="amount"
+              name="amount"
+              inputmode="decimal"
+              min="0"
+              step="0.01"
+              placeholder="25.00"
+              type="number"
+            />
+          </label>
+
+          <div class="quote-card" aria-live="polite">
+            <span>Estimated destination amount</span>
+            <strong id="quote">0.00</strong>
+            <small id="fee-note">Network fee: 0.00</small>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Execute XCM transfer</button>
+            <button id="reset-demo" type="button" class="secondary">Reset</button>
+          </div>
+        </form>
+
+        <section class="panel" aria-label="Balances">
+          <div class="panel-header">
+            <div>
+              <h2>Parachain balances</h2>
+              <p>Balances update when the simulated XCM execution succeeds.</p>
+            </div>
+          </div>
+          <div id="balances" class="balance-grid"></div>
+        </section>
+
+        <section class="panel wide" aria-label="Generated XCM message">
+          <div class="panel-header">
+            <div>
+              <h2>XCM preview</h2>
+              <p>The demo builds the instruction flow a production client would sign and submit.</p>
+            </div>
+          </div>
+          <pre id="xcm-preview" class="code-block"></pre>
+        </section>
+
+        <section class="panel wide" aria-label="Transaction history">
+          <div class="panel-header">
+            <div>
+              <h2>Transaction history</h2>
+              <p>Recent simulated transfers, hashes, and execution state.</p>
+            </div>
+          </div>
+          <div id="history" class="history"></div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./src/app.js"></script>
+  </body>
+</html>
