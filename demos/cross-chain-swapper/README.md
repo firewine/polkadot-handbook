@@ -20,16 +20,16 @@ operator documentation under `demos/cross-chain-swapper`.
 
 - GitHub submitter: `@firewine`
 - Polkadot payment address: to be supplied privately on maintainer request.
-- Demo video: the repo environment does not include video tooling, but the demo
-  is a dependency-free static app. Run the commands below, execute one transfer,
-  and the UI shows the route, quote, generated XCM, balance updates, and history
-  entry in one screen.
+- Demo recording: [`demo-recording.gif`](./demo-recording.gif)
+- Demo screenshot: [`demo-screenshot.jpg`](./demo-screenshot.jpg)
 
 ## Project Structure
 
 ```text
 demos/cross-chain-swapper/
   contracts/XcmAssetSwapper.sol
+  demo-recording.gif
+  demo-screenshot.jpg
   examples/xcm-message.json
   index.html
   src/app.js
@@ -49,6 +49,12 @@ Open `http://localhost:4173` in a browser.
 
 Opening `index.html` directly also works in modern browsers, but using a small
 local server mirrors how the demo would be hosted.
+
+To launch a self-running demo transfer for review or recording, open:
+
+```text
+http://localhost:4173/?autoplay=1
+```
 
 ## Usage Guide
 

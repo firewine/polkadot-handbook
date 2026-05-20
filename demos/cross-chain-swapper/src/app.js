@@ -265,3 +265,11 @@ fillOptions();
 renderBalances();
 renderHistory();
 updateQuote();
+
+if (new URLSearchParams(window.location.search).get("autoplay") === "1") {
+  window.setTimeout(() => {
+    amount.value = "10";
+    amount.dispatchEvent(new Event("input", { bubbles: true }));
+    form.requestSubmit();
+  }, 700);
+}
