@@ -79,6 +79,7 @@ function currentTransfer() {
   const symbol = asset.value;
   const fee = networkFee(symbol, source, destination);
   const netSourceAmount = Math.max(inputAmount - fee, 0);
+  const sourceDebit = netSourceAmount + fee;
   const destinationAmount = rateQuote(netSourceAmount, symbol, destination);
 
   return {
@@ -87,6 +88,7 @@ function currentTransfer() {
     symbol,
     inputAmount,
     netSourceAmount,
+    sourceDebit,
     destinationAsset: chains[destination].asset,
     destinationAmount,
     fee,
@@ -173,7 +175,7 @@ function renderHistory() {
       <article class="history-item">
         <div>
           <strong>${item.amount} ${item.symbol} from ${item.source} to ${item.destination}</strong>
-          <small>${item.received} ${item.destinationAsset} received after XCM fee at ${item.time}</small>
+          <small>${item.received} ${item.destinationAsset} received; ${item.fee} ${item.symbol} XCM fee and ${item.debited} ${item.symbol} debited at ${item.time}</small>
         </div>
         <span class="hash">${item.hash}</span>
       </article>
@@ -200,14 +202,14 @@ function executeTransfer(event) {
     return;
   }
 
-  const sourceBalance = state.balances[transfer.source][transfer.symbol] ?? 0;
-  if (sourceBalance < transfer.inputAmount) {
-    setStatus("Low balance", "error");
+  if (transfer.netSourceAmount <= 0) {
+    setStatus("Amount below fee", "error");
     return;
   }
 
-  if (transfer.netSourceAmount <= 0) {
-    setStatus("Amount below fee", "error");
+  const sourceBalance = state.balances[transfer.source][transfer.symbol] ?? 0;
+  if (sourceBalance < transfer.sourceDebit) {
+    setStatus("Low balance", "error");
     return;
   }
 
@@ -215,7 +217,7 @@ function executeTransfer(event) {
   form.querySelector("button[type='submit']").disabled = true;
 
   window.setTimeout(() => {
-    state.balances[transfer.source][transfer.symbol] -= transfer.inputAmount;
+    state.balances[transfer.source][transfer.symbol] -= transfer.sourceDebit;
     state.balances[transfer.destination][transfer.destinationAsset] =
       (state.balances[transfer.destination][transfer.destinationAsset] ?? 0) +
       transfer.destinationAmount;
@@ -225,6 +227,8 @@ function executeTransfer(event) {
       symbol: transfer.symbol,
       received: transfer.destinationAmount.toFixed(4),
       destinationAsset: transfer.destinationAsset,
+      fee: transfer.fee.toFixed(4),
+      debited: transfer.sourceDebit.toFixed(4),
       source: chains[transfer.source].name,
       destination: chains[transfer.destination].name,
       time: new Date().toLocaleTimeString(),
